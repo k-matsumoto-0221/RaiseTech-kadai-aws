@@ -15,10 +15,9 @@
     - 作成したIAMグループ
       ![作成したIAMグループ](./img/capture08.png)
 
-    - 作成したIAMグループに2つ権限を割り当てる
+    - 作成したIAMグループに権限を割り当てる
       - **AdministratorAccess**権限を付与
-      - **AWSBillingReadOnlyAccess**権限を付与
-        ![権限を付与](./img/capture09.png)
+        ![権限を付与](./img/capture11.png)
 
     - グループにユーザーを所属させる
       ![ユーザを所属させる](./img/capture10.png)
