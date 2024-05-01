@@ -1,0 +1,65 @@
+RaiseTech-kadai-user:~/environment/raisetech-live8-sample-app (feature/create_chat_function) $ bin/cloud9_dev 
+Your Gemfile lists the gem jsbundling-rails (>= 0) more than once.
+You should probably keep only one of them.
+Remove any duplicate entries and specify the gem only once.
+While it's not a problem now, it could cause errors if you change the version of one of them later.
+09:26:58 web.1  | started with pid 6345
+09:26:58 js.1   | unknown command: yarn build --watch
+09:27:00 web.1  | => Booting Puma
+09:27:00 web.1  | => Rails 7.0.4 application starting in development 
+09:27:00 web.1  | => Run `bin/rails server --help` for more startup options
+09:27:00 web.1  | Puma starting in single mode...
+09:27:00 web.1  | * Puma version: 5.6.5 (ruby 3.1.2-p20) ("Birdie's Version")
+09:27:00 web.1  | *  Min threads: 5
+09:27:00 web.1  | *  Max threads: 5
+09:27:00 web.1  | *  Environment: development
+09:27:00 web.1  | *          PID: 6345
+09:27:00 web.1  | * Listening on http://0.0.0.0:8080
+09:27:00 web.1  | Use Ctrl-C to stop
+09:27:09 web.1  | Started GET "/" for 103.5.140.151 at 2024-04-30 09:27:09 +0000
+09:27:09 web.1  | Cannot render console from 103.5.140.151! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+While it's not a problem now, it could cause errors if you change the version of one of them later.
+09:26:58 web.1  | started with pid 6345
+09:26:58 js.1   | unknown command: yarn build --watch
+09:27:00 web.1  | => Booting Puma
+09:27:00 web.1  | => Rails 7.0.4 application starting in development 
+09:27:00 web.1  | => Run `bin/rails server --help` for more startup options
+09:27:00 web.1  | Puma starting in single mode...
+09:27:00 web.1  | * Puma version: 5.6.5 (ruby 3.1.2-p20) ("Birdie's Version")
+09:27:00 web.1  | *  Min threads: 5
+09:27:00 web.1  | *  Max threads: 5
+09:27:00 web.1  | *  Environment: development
+09:27:00 web.1  | *          PID: 6345
+09:27:00 web.1  | * Listening on http://0.0.0.0:8080
+09:27:00 web.1  | Use Ctrl-C to stop
+09:27:09 web.1  | Started GET "/" for 103.5.140.151 at 2024-04-30 09:27:09 +0000
+09:27:09 web.1  | Cannot render console from 103.5.140.151! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+09:27:09 web.1  |   ActiveRecord::SchemaMigration Pluck (24.6ms)  SELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC
+09:27:09 web.1  | Processing by FruitsController#index as HTML
+09:27:10 web.1  |   Rendering layout layouts/application.html.slim
+09:27:10 web.1  |   Rendering fruits/index.html.slim within layouts/application
+09:27:10 web.1  |   Fruit Load (5.4ms)  SELECT `fruits`.* FROM `fruits` ORDER BY `fruits`.`row_order` ASC
+09:27:10 web.1  |   ↳ app/views/fruits/index.html.slim:13
+09:27:10 web.1  |   Rendered fruits/index.html.slim within layouts/application (Duration: 29.8ms | Allocations: 15642)
+09:27:10 web.1  |   Rendered layouts/_navigation_links.html.erb (Duration: 0.4ms | Allocations: 176)
+09:27:10 web.1  |   Rendered layouts/_navigation.html.slim (Duration: 15.8ms | Allocations: 3605)
+09:27:10 web.1  |   Rendered layouts/_messages.html.slim (Duration: 9.9ms | Allocations: 3355)
+09:27:10 web.1  |   Rendered layout layouts/application.html.slim (Duration: 185.6ms | Allocations: 49277)
+09:27:10 web.1  | Completed 200 OK in 258ms (Views: 188.2ms | ActiveRecord: 9.6ms | Allocations: 55760)
+09:27:10 web.1  | 
+09:27:10 web.1  | 
+09:27:13 web.1  | Started GET "/" for 103.5.140.151 at 2024-04-30 09:27:13 +0000
+09:27:13 web.1  | Cannot render console from 103.5.140.151! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+09:27:13 web.1  | Processing by FruitsController#index as HTML
+09:27:13 web.1  |   Rendering layout layouts/application.html.slim
+09:27:13 web.1  |   Rendering fruits/index.html.slim within layouts/application
+09:27:13 web.1  |   Fruit Load (2.2ms)  SELECT `fruits`.* FROM `fruits` ORDER BY `fruits`.`row_order` ASC
+09:27:13 web.1  |   ↳ app/views/fruits/index.html.slim:13
+09:27:13 web.1  |   Rendered fruits/index.html.slim within layouts/application (Duration: 7.0ms | Allocations: 818)
+09:27:13 web.1  |   Rendered layouts/_navigation_links.html.erb (Duration: 0.1ms | Allocations: 42)
+09:27:13 web.1  |   Rendered layouts/_navigation.html.slim (Duration: 2.8ms | Allocations: 214)
+09:27:13 web.1  |   Rendered layouts/_messages.html.slim (Duration: 0.3ms | Allocations: 53)
+09:27:13 web.1  |   Rendered layout layouts/application.html.slim (Duration: 20.7ms | Allocations: 3326)
+09:27:13 web.1  | Completed 200 OK in 25ms (Views: 20.0ms | ActiveRecord: 2.2ms | Allocations: 3836)
+09:27:13 web.1  | 
+09:27:13 web.1  | 
