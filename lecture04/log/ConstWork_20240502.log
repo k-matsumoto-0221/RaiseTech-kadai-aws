@@ -1,0 +1,95 @@
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % ssh -i "RaiseTech-kadai-keyPair.pem" ec2-user@ec2-13-231-238-28.ap-northeast-1.compute.amazonaws.com
+The authenticity of host 'ec2-13-231-238-28.ap-northeast-1.compute.amazonaws.com (13.231.238.28)' can't be established.
+ED25519 key fingerprint is SHA256:VYavWy87lK+B98q+LgELcd9YmPZo+GHf9Ikx3KWj89A.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'ec2-13-231-238-28.ap-northeast-1.compute.amazonaws.com' (ED25519) to the list of known hosts.
+   ,     #_
+   ~\_  ####_        Amazon Linux 2
+  ~~  \_#####\
+  ~~     \###|       AL2 End of Life is 2025-06-30.
+  ~~       \#/ ___
+   ~~       V~' '->
+    ~~~         /    A newer version of Amazon Linux is available!
+      ~~._.   _/
+         _/ _/       Amazon Linux 2023, GA and supported until 2028-03-15.
+       _/m/'           https://aws.amazon.com/linux/amazon-linux-2023/
+
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ sudo yum -y install mysql
+読み込んだプラグイン:extras_suggestions, langpacks, priorities, update-motd
+amzn2-core                                                                                                                                                    | 3.6 kB  00:00:00     
+依存性の解決をしています
+--> トランザクションの確認を実行しています。
+---> パッケージ mariadb.x86_64 1:5.5.68-1.amzn2.0.1 を インストール
+--> 依存性解決を終了しました。
+
+依存性を解決しました
+
+=====================================================================================================================================================================================
+ Package                                アーキテクチャー                      バージョン                                             リポジトリー                               容量
+=====================================================================================================================================================================================
+インストール中:
+ mariadb                                x86_64                                1:5.5.68-1.amzn2.0.1                                   amzn2-core                                8.8 M
+
+トランザクションの要約
+=====================================================================================================================================================================================
+インストール  1 パッケージ
+
+総ダウンロード容量: 8.8 M
+インストール容量: 49 M
+Downloading packages:
+mariadb-5.5.68-1.amzn2.0.1.x86_64.rpm                                                                                                                         | 8.8 MB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  インストール中          : 1:mariadb-5.5.68-1.amzn2.0.1.x86_64                                                                                                                  1/1 
+  検証中                  : 1:mariadb-5.5.68-1.amzn2.0.1.x86_64                                                                                                                  1/1 
+
+インストール:
+  mariadb.x86_64 1:5.5.68-1.amzn2.0.1                                                                                                                                                
+
+完了しました!
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ mysql -h raisetech-kadai4-rds.cyavdr4gmgko.ap-northeast-1.rds.amazonaws.com -u admin -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 33
+Server version: 8.0.35 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> 
+MySQL [(none)]> exit
+Bye
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ 
+[ec2-user@ip-10-0-11-62 ~]$ exit
+ログアウト
+Connection to ec2-13-231-238-28.ap-northeast-1.compute.amazonaws.com closed.
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % 
+k-matsumoto-2123@MacBook-Air .ssh % 
