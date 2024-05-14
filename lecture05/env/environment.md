@@ -13,8 +13,13 @@
   - v17.9.1
 - yarn
   - 1.22.19
-- DB エンジン
-  - MySQL
+- DB
+  - mysql
+  - mysql-devel
+- Nginx
+  - 1.22.1
+- Unicorn
+  - v6.1.0
 - その他
   - [こちら](https://pikawaka.com/rails/ec2_deploy) を参考に以下をインストール
     - gcc-c++

@@ -67,11 +67,3 @@
 
 ### 5. アプリケーションにアクセス
 - ブラウザに **http://EC2グローバルIP:80** を入力
-  - 保存
-    - 画像1
-    ![capture02](./img/capture02.png)
-    - 画像2
-    ![capture03](./img/capture03.png)
-  - 削除
-    - 画像1
-    ![capture04](./img/capture04.png)
