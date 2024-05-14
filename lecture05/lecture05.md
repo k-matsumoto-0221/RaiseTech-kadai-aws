@@ -40,7 +40,7 @@
       - EC2 用
 
 - 環境構成図
-  - ![環境構成図](./env/drawio/envConfDiagram.png)
+![環境構成図](./env/drawio/envConfDiagram.png)
 
 ## 2. 組み込みサーバだけで動作確認
 - EC2 と RDS を作成した後、サンプルアプリケーションを **組み込みサーバ** で動作させる
