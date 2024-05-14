@@ -39,5 +39,3 @@
     $ bundle exec unicorn_rails -c ./config/unicorn.rb -E development
     ```
 - ブラウザに **http://DNS名:80** を入力
-  - 画像1
-  ![capture03](./img/capture03.png)
