@@ -23,7 +23,7 @@
 
 ### 3. 以下のファイルを修正
 - EC2
-  - **事前にアプリケーションを停止しておくこと**
+  - <font color="Red">事前にアプリケーションを停止しておくこと</font>
   - development.rb
     - **34行目** を **amazon** に修正
     ![capture03](./img/capture03.png)
@@ -39,3 +39,15 @@
 
 ### 5. ブラウザでアプリケーションにアクセス
 - ブラウザに **http://DNS名:80** を入力
+  - 保存
+    - 画像1
+    ![capture05](./img/capture05.png)
+    - 画像2
+    ![capture06](./img/capture06.png)
+    - 画像3
+    ![capture07](./img/capture07.png)
+  - 削除
+    - 画像1
+    ![capture08](./img/capture08.png)
+    - 画像2
+    ![capture09](./img/capture09.png)
