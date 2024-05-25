@@ -17,11 +17,11 @@
 - `lecture05` で作成した環境を使用すること
 - メールには Amazon SNS を使用し、OK/NG アクションを設定すること
 - アラームとアクションを設定した状態で、Rails アプリケーションが使える/使えない状態にして、動作確認をしてみる
-  - 構築した手順は [こちら](./procedure.md) に記載
+  - 構築した手順は [こちら](./procedure/procedure.md) に記載
   #### ▶︎ OK の場合
   ![capture05](./img/capture05.png)
   #### ▶︎ NG の場合
-  ![capture06](./img/capture06.png)
+  ![capture06](./img/capture06.png) 
 
 ## 3. AWS 利用料の見積もり作成
 - 見積もりは [こちら](https://calculator.aws/#/estimate?id=7d814114fba224e7ebd5608f495151dbb31b7409)
