@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Create the environment up to the 6th course.
+
+Parameters: 
+  Namebase:
+    Type: String
+    Default: RaiseTech-kadai10
+  NetworkStack:
+    Type: String
+    Default: network
+  MyIP:
+    Type: String
+    Default: hogehoge  # MyIPを記載 
+
+Resources:
+  #--------------------------------------------#
+  # セキュリティグループ
+  #--------------------------------------------#
+  Ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for ec2
+      GroupName: !Sub ${Namebase}-sg-ec2
+      SecurityGroupIngress:
+        - CidrIp: !Sub ${MyIP}
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: !Sub ${MyIP}
+          FromPort: 3000
+          IpProtocol: tcp
+          ToPort: 3000
+        - FromPort: 80
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref AlbSecurityGroup
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-ec2
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Vpc
+
+  RdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for rds
+      GroupName: !Sub ${Namebase}-sg-rds
+      SecurityGroupEgress:
+        - FromPort: 3306
+          IpProtocol: tcp
+          DestinationSecurityGroupId: !Ref Ec2SecurityGroup
+          ToPort: 3306
+      SecurityGroupIngress:
+        - FromPort: 3306
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref Ec2SecurityGroup
+          ToPort: 3306
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-rds
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Vpc
+  
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for alb
+      GroupName: !Sub ${Namebase}-sg-alb
+      SecurityGroupIngress:
+        - CidrIp: !Sub ${MyIP}
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-alb
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Vpc
+
+  #--------------------------------------------#
+  # IAMロール
+  #--------------------------------------------#
+  Ec2IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Path: /
+      Policies:
+          - PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:GetSecretValue
+                  Resource: 
+                    - !Ref RdsSecretsManager
+            PolicyName: SecretsManagerReadPolicy
+      RoleName: !Sub ${Namebase}-iam-role
+
+  #--------------------------------------------#
+  # インスタンスプロファイル
+  #--------------------------------------------#
+  Ec2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref Ec2IamRole
+
+  #--------------------------------------------#
+  # シークレットマネージャー
+  #--------------------------------------------#
+  RdsSecretsManager:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Password manager for RDS
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "admin"}'
+        GenerateStringKey: password
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\\'
+      Name: !Sub ${Namebase}-secrets-manager
+
+Outputs:
+  Ec2SecurityGroup:
+    Value: !Ref Ec2SecurityGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-Ec2SecurityGroup
+
+  RdsSecurityGroup:
+    Value: !Ref RdsSecurityGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-RdsSecurityGroup
+
+  AlbSecurityGroup:
+    Value: !Ref AlbSecurityGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-AlbSecurityGroup
+
+  Ec2IamRole:
+    Value: !GetAtt Ec2IamRole.Arn
+    Export: 
+      Name: !Sub ${AWS::StackName}-Ec2IamRole
+
+  RdsSecretsManager:
+    Value: !Ref RdsSecretsManager
+    Export: 
+      Name: !Sub ${AWS::StackName}-RdsSecretsManager
+
+  Ec2InstanceProfile:
+    Value: !Ref Ec2InstanceProfile
+    Export: 
+      Name: !Sub ${AWS::StackName}-Ec2InstanceProfile

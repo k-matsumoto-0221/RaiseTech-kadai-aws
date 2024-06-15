@@ -1,0 +1,101 @@
+Last login: Wed Jun 12 21:36:16 on ttys001
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stacks --stack-name network --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-15T06:49:11.906000+00:00  |
++------------------------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stack-resources --stack-name network --query 'StackResources[*].[LogicalResourceId, ResourceType, ResourceStatus]' --output table
+-------------------------------------------------------------------------------------------
+|                                 DescribeStackResources                                  |
++----------------------------+-----------------------------------------+------------------+
+|  Igw                       |  AWS::EC2::InternetGateway              |  CREATE_COMPLETE |
+|  IgwAttach                 |  AWS::EC2::VPCGatewayAttachment         |  CREATE_COMPLETE |
+|  PrivateRouteTable         |  AWS::EC2::RouteTable                   |  CREATE_COMPLETE |
+|  PrivateSubnet1            |  AWS::EC2::Subnet                       |  CREATE_COMPLETE |
+|  PrivateSubnet1Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREATE_COMPLETE |
+|  PrivateSubnet2            |  AWS::EC2::Subnet                       |  CREATE_COMPLETE |
+|  PrivateSubnet2Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREATE_COMPLETE |
+|  PublicRoute               |  AWS::EC2::Route                        |  CREATE_COMPLETE |
+|  PublicRouteTable          |  AWS::EC2::RouteTable                   |  CREATE_COMPLETE |
+|  PublicSubnet1             |  AWS::EC2::Subnet                       |  CREATE_COMPLETE |
+|  PublicSubnet1Association  |  AWS::EC2::SubnetRouteTableAssociation  |  CREATE_COMPLETE |
+|  PublicSubnet2             |  AWS::EC2::Subnet                       |  CREATE_COMPLETE |
+|  PublicSubnet2Association  |  AWS::EC2::SubnetRouteTableAssociation  |  CREATE_COMPLETE |
+|  RdsSubnetGroup            |  AWS::RDS::DBSubnetGroup                |  CREATE_COMPLETE |
+|  Vpc                       |  AWS::EC2::VPC                          |  CREATE_COMPLETE |
++----------------------------+-----------------------------------------+------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stacks --stack-name security --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-15T07:55:13.202000+00:00  |
++------------------------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stack-resources --stack-name security --query 'StackResources[*].[LogicalResourceId, ResourceType, ResourceStatus]' --output table
+--------------------------------------------------------------------------
+|                         DescribeStackResources                         |
++--------------------+-------------------------------+-------------------+
+|  AlbSecurityGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
+|  Ec2IamRole        |  AWS::IAM::Role               |  CREATE_COMPLETE  |
+|  Ec2InstanceProfile|  AWS::IAM::InstanceProfile    |  CREATE_COMPLETE  |
+|  Ec2SecurityGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
+|  RdsSecretsManager |  AWS::SecretsManager::Secret  |  CREATE_COMPLETE  |
+|  RdsSecurityGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
++--------------------+-------------------------------+-------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stacks --stack-name application --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-15T09:18:58.694000+00:00  |
++------------------------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % aws cloudformation describe-stack-resources --stack-name application --query 'StackResources[*].[LogicalResourceId, ResourceType, ResourceStatus]' --output table
+-------------------------------------------------------------------------------------------
+|                                 DescribeStackResources                                  |
++----------------------+-----------------------------------------------+------------------+
+|  Alb                 |  AWS::ElasticLoadBalancingV2::LoadBalancer    |  CREATE_COMPLETE |
+|  AlbListener         |  AWS::ElasticLoadBalancingV2::Listener        |  CREATE_COMPLETE |
+|  AlbTargetGroup      |  AWS::ElasticLoadBalancingV2::TargetGroup     |  CREATE_COMPLETE |
+|  CloudWatchAlarm     |  AWS::CloudWatch::Alarm                       |  CREATE_COMPLETE |
+|  Ec2                 |  AWS::EC2::Instance                           |  CREATE_COMPLETE |
+|  Rds                 |  AWS::RDS::DBInstance                         |  CREATE_COMPLETE |
+|  RdsSecretAttachment |  AWS::SecretsManager::SecretTargetAttachment  |  CREATE_COMPLETE |
+|  S3                  |  AWS::S3::Bucket                              |  CREATE_COMPLETE |
+|  SnsTopic            |  AWS::SNS::Topic                              |  CREATE_COMPLETE |
++----------------------+-----------------------------------------------+------------------+
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ % 
+k-matsumoto-2123@MacBook-Air ~ %
