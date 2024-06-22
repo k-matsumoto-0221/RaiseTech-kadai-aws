@@ -1,0 +1,108 @@
+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stacks --stack-nam e network --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-22T06:36:55.013000+00:00  |
++------------------------------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stack-resources -- stack-name network --query 'StackResources[*].[LogicalResourceId, ResourceTy pe, ResourceStatus]' --output table
+---------------------------------------------------------------------------- -------------
+|                                DescribeStackResources                                  |
++--------------------------+-----------------------------------------+------ ------------+
+|  Lec10Igw                |  AWS::EC2::InternetGateway              |  CREA TE_COMPLETE |
+|  Lec10IgwAttach          |  AWS::EC2::VPCGatewayAttachment         |  CREA TE_COMPLETE |
+|  Lec10PriRtTable         |  AWS::EC2::RouteTable                   |  CREA TE_COMPLETE |
+|  Lec10PriSub1Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREA TE_COMPLETE |
+|  Lec10PriSub2Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREA TE_COMPLETE |
+|  Lec10PriSubnet1         |  AWS::EC2::Subnet                       |  CREA TE_COMPLETE |
+|  Lec10PriSubnet2         |  AWS::EC2::Subnet                       |  CREA TE_COMPLETE |
+|  Lec10PubRoute           |  AWS::EC2::Route                        |  CREA TE_COMPLETE |
+|  Lec10PubRtTable         |  AWS::EC2::RouteTable                   |  CREA TE_COMPLETE |
+|  Lec10PubSub1Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREA TE_COMPLETE |
+|  Lec10PubSub2Association |  AWS::EC2::SubnetRouteTableAssociation  |  CREA TE_COMPLETE |
+|  Lec10PubSubnet1         |  AWS::EC2::Subnet                       |  CREA TE_COMPLETE |
+|  Lec10PubSubnet2         |  AWS::EC2::Subnet                       |  CREA TE_COMPLETE |
+|  Lec10RdsSubGroup        |  AWS::RDS::DBSubnetGroup                |  CREA TE_COMPLETE |
+|  Lec10Vpc                |  AWS::EC2::VPC                          |  CREA TE_COMPLETE |
++--------------------------+-----------------------------------------+------ ------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stacks --stack-nam e security --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-22T06:38:44.677000+00:00  |
++------------------------------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stack-resources -- stack-name security --query 'StackResources[*].[LogicalResourceId, ResourceT ype, ResourceStatus]' --output table
+--------------------------------------------------------------------------
+|                         DescribeStackResources                         |
++--------------------+-------------------------------+-------------------+
+|  Lec10AlbSecGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
+|  Lec10Ec2IamRole   |  AWS::IAM::Role               |  CREATE_COMPLETE  |
+|  Lec10Ec2InsProfile|  AWS::IAM::InstanceProfile    |  CREATE_COMPLETE  |
+|  Lec10Ec2SecGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
+|  Lec10RdsSecGroup  |  AWS::EC2::SecurityGroup      |  CREATE_COMPLETE  |
+|  Lec10RdsSecManager|  AWS::SecretsManager::Secret  |  CREATE_COMPLETE  |
++--------------------+-------------------------------+-------------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stacks --stack-nam e application --query 'Stacks[0].[StackStatus, CreationTime]' --output table e application --query 'Stacks[0].[StackStatus, CreationTime]' --output table
+--------------------------------------
+|           DescribeStacks           |
++------------------------------------+
+|  CREATE_COMPLETE                   |
+|  2024-06-22T06:42:10.059000+00:00  |
++------------------------------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ aws cloudformation describe-stack-resources -- stack-name application --query 'StackResources[*].[LogicalResourceId, Resour ceType, ResourceStatus]' --output table
+---------------------------------------------------------------------------- -----------------
+|                                  DescribeStackResources                                    |
++------------------------+-----------------------------------------------+-- ----------------+
+|  Lec10Alb              |  AWS::ElasticLoadBalancingV2::LoadBalancer    |   CREATE_COMPLETE |
+|  Lec10AlbListener      |  AWS::ElasticLoadBalancingV2::Listener        |   CREATE_COMPLETE |
+|  Lec10AlbTarGroup      |  AWS::ElasticLoadBalancingV2::TargetGroup     |   CREATE_COMPLETE |
+|  Lec10CWAlarm          |  AWS::CloudWatch::Alarm                       |   CREATE_COMPLETE |
+|  Lec10Ec2              |  AWS::EC2::Instance                           |   CREATE_COMPLETE |
+|  Lec10Rds              |  AWS::RDS::DBInstance                         |   CREATE_COMPLETE |
+|  Lec10RdsSecAttachment |  AWS::SecretsManager::SecretTargetAttachment  |   CREATE_COMPLETE |
+|  Lec10S3               |  AWS::S3::Bucket                              |   CREATE_COMPLETE |
+|  Lec10SnsTopic         |  AWS::SNS::Topic                              |   CREATE_COMPLETE |
++------------------------+-----------------------------------------------+-- ----------------+
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 
+MacBook-Air:~ k-matsumoto-2123$ 

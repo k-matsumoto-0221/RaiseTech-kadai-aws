@@ -11,38 +11,38 @@ Parameters:
     Default: network
   MyIP:
     Type: String
-    Default: hogehoge  # MyIPを記載 
+    Default: hogehoge  # MyIPを記載
 
 Resources:
   #--------------------------------------------#
   # セキュリティグループ
   #--------------------------------------------#
-  Ec2SecurityGroup:
+  Lec10Ec2SecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: for ec2
       GroupName: !Sub ${Namebase}-sg-ec2
       SecurityGroupIngress:
-        - CidrIp: !Sub ${MyIP}
+        - CidrIp: !Sub ${MyIP}/32
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-        - CidrIp: !Sub ${MyIP}
+        - CidrIp: !Sub ${MyIP}/32
           FromPort: 3000
           IpProtocol: tcp
           ToPort: 3000
         - FromPort: 80
           IpProtocol: tcp
-          SourceSecurityGroupId: !Ref AlbSecurityGroup
+          SourceSecurityGroupId: !Ref Lec10AlbSecGroup
           ToPort: 80
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-sg-ec2
       VpcId: 
         Fn::ImportValue:
-          !Sub ${NetworkStack}-Vpc
+          !Sub ${NetworkStack}-Lec10Vpc
 
-  RdsSecurityGroup:
+  Lec10RdsSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: for rds
@@ -50,27 +50,27 @@ Resources:
       SecurityGroupEgress:
         - FromPort: 3306
           IpProtocol: tcp
-          DestinationSecurityGroupId: !Ref Ec2SecurityGroup
+          DestinationSecurityGroupId: !Ref Lec10Ec2SecGroup
           ToPort: 3306
       SecurityGroupIngress:
         - FromPort: 3306
           IpProtocol: tcp
-          SourceSecurityGroupId: !Ref Ec2SecurityGroup
+          SourceSecurityGroupId: !Ref Lec10Ec2SecGroup
           ToPort: 3306
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-sg-rds
       VpcId:
         Fn::ImportValue:
-          !Sub ${NetworkStack}-Vpc
+          !Sub ${NetworkStack}-Lec10Vpc
   
-  AlbSecurityGroup:
+  Lec10AlbSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: for alb
       GroupName: !Sub ${Namebase}-sg-alb
       SecurityGroupIngress:
-        - CidrIp: !Sub ${MyIP}
+        - CidrIp: !Sub ${MyIP}/32
           FromPort: 80
           IpProtocol: tcp
           ToPort: 80
@@ -79,12 +79,12 @@ Resources:
           Value: !Sub ${Namebase}-sg-alb
       VpcId: 
         Fn::ImportValue:
-          !Sub ${NetworkStack}-Vpc
+          !Sub ${NetworkStack}-Lec10Vpc
 
   #--------------------------------------------#
   # IAMロール
   #--------------------------------------------#
-  Ec2IamRole:
+  Lec10Ec2IamRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -107,23 +107,23 @@ Resources:
                   Action:
                     - secretsmanager:GetSecretValue
                   Resource: 
-                    - !Ref RdsSecretsManager
+                    - !Ref Lec10RdsSecManager
             PolicyName: SecretsManagerReadPolicy
       RoleName: !Sub ${Namebase}-iam-role
 
   #--------------------------------------------#
   # インスタンスプロファイル
   #--------------------------------------------#
-  Ec2InstanceProfile:
+  Lec10Ec2InsProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
-        - !Ref Ec2IamRole
+        - !Ref Lec10Ec2IamRole
 
   #--------------------------------------------#
   # シークレットマネージャー
   #--------------------------------------------#
-  RdsSecretsManager:
+  Lec10RdsSecManager:
     Type: AWS::SecretsManager::Secret
     Properties:
       Description: Password manager for RDS
@@ -135,32 +135,32 @@ Resources:
       Name: !Sub ${Namebase}-secrets-manager
 
 Outputs:
-  Ec2SecurityGroup:
-    Value: !Ref Ec2SecurityGroup
+  Lec10Ec2SecGroup:
+    Value: !Ref Lec10Ec2SecGroup
     Export: 
-      Name: !Sub ${AWS::StackName}-Ec2SecurityGroup
+      Name: !Sub ${AWS::StackName}-Lec10Ec2SecGroup
 
-  RdsSecurityGroup:
-    Value: !Ref RdsSecurityGroup
+  Lec10RdsSecGroup:
+    Value: !Ref Lec10RdsSecGroup
     Export: 
-      Name: !Sub ${AWS::StackName}-RdsSecurityGroup
+      Name: !Sub ${AWS::StackName}-Lec10RdsSecGroup
 
-  AlbSecurityGroup:
-    Value: !Ref AlbSecurityGroup
+  Lec10AlbSecGroup:
+    Value: !Ref Lec10AlbSecGroup
     Export: 
-      Name: !Sub ${AWS::StackName}-AlbSecurityGroup
+      Name: !Sub ${AWS::StackName}-Lec10AlbSecGroup
 
-  Ec2IamRole:
-    Value: !GetAtt Ec2IamRole.Arn
+  Lec10Ec2IamRole:
+    Value: !GetAtt Lec10Ec2IamRole.Arn
     Export: 
-      Name: !Sub ${AWS::StackName}-Ec2IamRole
+      Name: !Sub ${AWS::StackName}-Lec10Ec2IamRole
 
-  RdsSecretsManager:
-    Value: !Ref RdsSecretsManager
+  Lec10RdsSecManager:
+    Value: !Ref Lec10RdsSecManager
     Export: 
-      Name: !Sub ${AWS::StackName}-RdsSecretsManager
+      Name: !Sub ${AWS::StackName}-Lec10RdsSecManager
 
-  Ec2InstanceProfile:
-    Value: !Ref Ec2InstanceProfile
+  Lec10Ec2InsProfile:
+    Value: !Ref Lec10Ec2InsProfile
     Export: 
-      Name: !Sub ${AWS::StackName}-Ec2InstanceProfile
+      Name: !Sub ${AWS::StackName}-Lec10Ec2InsProfile

@@ -19,8 +19,8 @@
       - application
     - YAML テンプレート
       - [NetWorkLayer.yml](./cfn/NetworkLayer.yml)
-      - [ApplicationLayer.yml](./cfn/ApplicationLayer.yml)
       - [SecurityLayer.yml](./cfn/SecurityLayer.yml)
+      - [ApplicationLayer.yml](./cfn/ApplicationLayer.yml)
   - AWS CLI にてリソースの作成結果を確認する
     - 実行するコマンド
       ```bash:title
@@ -28,7 +28,7 @@
       $ aws cloudformation describe-stack-resources --stack-name ${Stack-Name} --query 'StackResources[*].[LogicalResourceId, ResourceType, ResourceStatus]' --output table
       ```
     - ログ
-      - [ConstWork_20240615.log](./log/ConstWork_20240615.log)
+      - [ConstWork_20240622.log](./log/ConstWork_20240621.log)
 - リソースが作成された後は、アプリケーションが動作するように各種パッケージのインストールやファイルの修正を行う
   - 今回は事前準備として、必要なパッケージが導入済みのAMIを使用している
 
@@ -52,7 +52,7 @@
   - 画像2
   ![capture07](./img/capture07.png)
 
-## 5. OKとNGの両パターンのメールを受信
+## 5. OKと NG の両パターンのメールを受信
 - OKの場合
   - 画像1
   ![capture08](./img/capture08.png)

@@ -11,7 +11,7 @@ Resources:
   #--------------------------------------------#
   # VPC
   #--------------------------------------------#
-  Vpc:
+  Lec10Vpc:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -25,7 +25,7 @@ Resources:
   #--------------------------------------------#
   # サブネット
   #--------------------------------------------#
-  PublicSubnet1:
+  Lec10PubSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [ 0, !GetAZs ]
@@ -34,9 +34,9 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-subnet-public1
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
 
-  PublicSubnet2:
+  Lec10PubSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [ 1, !GetAZs ]
@@ -45,9 +45,9 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-subnet-public2
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
 
-  PrivateSubnet1:
+  Lec10PriSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [ 0, !GetAZs ]
@@ -56,9 +56,9 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-subnet-private1
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
 
-  PrivateSubnet2:
+  Lec10PriSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [ 1, !GetAZs ]
@@ -67,15 +67,15 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-subnet-private2
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
 
-  RdsSubnetGroup:
+  Lec10RdsSubGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupDescription: for rds
       SubnetIds:
-        - !Ref PrivateSubnet1
-        - !Ref PrivateSubnet2
+        - !Ref Lec10PriSubnet1
+        - !Ref Lec10PriSubnet2
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-rds-subnet-group
@@ -83,97 +83,97 @@ Resources:
   #--------------------------------------------#
   # インターネットゲートウェイ
   #--------------------------------------------#
-  Igw:
+  Lec10Igw:
     Type: AWS::EC2::InternetGateway
     Properties: 
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-igw
 
-  IgwAttach:
+  Lec10IgwAttach:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties: 
-      InternetGatewayId: !Ref Igw
-      VpcId: !Ref Vpc
+      InternetGatewayId: !Ref Lec10Igw
+      VpcId: !Ref Lec10Vpc
 
   #--------------------------------------------#
   # ルートテーブル
   #--------------------------------------------#
-  PublicRouteTable:
+  Lec10PubRtTable:
     Type: AWS::EC2::RouteTable
     Properties:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-rtb-public
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
     
-  PrivateRouteTable:
+  Lec10PriRtTable:
     Type: AWS::EC2::RouteTable
     Properties:
       Tags:
         - Key: Name
           Value: !Sub ${Namebase}-rtb-private
-      VpcId: !Ref Vpc
+      VpcId: !Ref Lec10Vpc
 
-  PublicRoute:
+  Lec10PubRoute:
     Type: AWS::EC2::Route
-    DependsOn: Igw
+    DependsOn: Lec10Igw
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref Igw
-      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref Lec10Igw
+      RouteTableId: !Ref Lec10PubRtTable
 
-  PublicSubnet1Association:
+  Lec10PubSub1Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref Lec10PubRtTable
+      SubnetId: !Ref Lec10PubSubnet1
 
-  PublicSubnet2Association:
+  Lec10PubSub2Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref Lec10PubRtTable
+      SubnetId: !Ref Lec10PubSubnet2
 
-  PrivateSubnet1Association:
+  Lec10PriSub1Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref PrivateRouteTable
-      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref Lec10PriRtTable
+      SubnetId: !Ref Lec10PriSubnet1
 
-  PrivateSubnet2Association:
+  Lec10PriSub2Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref PrivateRouteTable
-      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref Lec10PriRtTable
+      SubnetId: !Ref Lec10PriSubnet2
 
 Outputs:
-  Vpc:
-    Value: !Ref Vpc
+  Lec10Vpc:
+    Value: !Ref Lec10Vpc
     Export:
-      Name: !Sub ${AWS::StackName}-Vpc
+      Name: !Sub ${AWS::StackName}-Lec10Vpc
 
-  PublicSubnet1:
-    Value: !Ref PublicSubnet1
+  Lec10PubSubnet1:
+    Value: !Ref Lec10PubSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet1
+      Name: !Sub ${AWS::StackName}-Lec10PubSubnet1
 
-  PublicSubnet2:
-    Value: !Ref PublicSubnet2
+  Lec10PubSubnet2:
+    Value: !Ref Lec10PubSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet2
+      Name: !Sub ${AWS::StackName}-Lec10PubSubnet2
 
-  PrivateSubnet1:
-    Value: !Ref PrivateSubnet1
+  Lec10PriSubnet1:
+    Value: !Ref Lec10PriSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet1
+      Name: !Sub ${AWS::StackName}-Lec10PriSubnet1
 
-  PrivateSubnet2:
-    Value: !Ref PrivateSubnet2
+  Lec10PriSubnet2:
+    Value: !Ref Lec10PriSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet2
+      Name: !Sub ${AWS::StackName}-Lec10PriSubnet2
 
-  RdsSubnetGroup:
-    Value: !Ref RdsSubnetGroup
+  Lec10RdsSubGroup:
+    Value: !Ref Lec10RdsSubGroup
     Export:
-      Name: !Sub ${AWS::StackName}-RdsSubnetGroup
+      Name: !Sub ${AWS::StackName}-Lec10RdsSubGroup
