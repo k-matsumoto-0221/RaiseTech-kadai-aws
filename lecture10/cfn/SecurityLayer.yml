@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Create the environment up to the 6th course.
+
+Parameters: 
+  Namebase:
+    Type: String
+    Default: RaiseTech-kadai10
+  NetworkStack:
+    Type: String
+    Default: network
+  MyIP:
+    Type: String
+    Default: hogehoge  # MyIPを記載
+
+Resources:
+  #--------------------------------------------#
+  # セキュリティグループ
+  #--------------------------------------------#
+  Lec10Ec2SecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for ec2
+      GroupName: !Sub ${Namebase}-sg-ec2
+      SecurityGroupIngress:
+        - CidrIp: !Sub ${MyIP}/32
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: !Sub ${MyIP}/32
+          FromPort: 3000
+          IpProtocol: tcp
+          ToPort: 3000
+        - FromPort: 80
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref Lec10AlbSecGroup
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-ec2
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Lec10Vpc
+
+  Lec10RdsSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for rds
+      GroupName: !Sub ${Namebase}-sg-rds
+      SecurityGroupEgress:
+        - FromPort: 3306
+          IpProtocol: tcp
+          DestinationSecurityGroupId: !Ref Lec10Ec2SecGroup
+          ToPort: 3306
+      SecurityGroupIngress:
+        - FromPort: 3306
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref Lec10Ec2SecGroup
+          ToPort: 3306
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-rds
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Lec10Vpc
+  
+  Lec10AlbSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for alb
+      GroupName: !Sub ${Namebase}-sg-alb
+      SecurityGroupIngress:
+        - CidrIp: !Sub ${MyIP}/32
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-sg-alb
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkStack}-Lec10Vpc
+
+  #--------------------------------------------#
+  # IAMロール
+  #--------------------------------------------#
+  Lec10Ec2IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Path: /
+      Policies:
+          - PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:GetSecretValue
+                  Resource: 
+                    - !Ref Lec10RdsSecManager
+            PolicyName: SecretsManagerReadPolicy
+      RoleName: !Sub ${Namebase}-iam-role
+
+  #--------------------------------------------#
+  # インスタンスプロファイル
+  #--------------------------------------------#
+  Lec10Ec2InsProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref Lec10Ec2IamRole
+
+  #--------------------------------------------#
+  # シークレットマネージャー
+  #--------------------------------------------#
+  Lec10RdsSecManager:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Password manager for RDS
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "admin"}'
+        GenerateStringKey: password
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\\'
+      Name: !Sub ${Namebase}-secrets-manager
+
+Outputs:
+  Lec10Ec2SecGroup:
+    Value: !Ref Lec10Ec2SecGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10Ec2SecGroup
+
+  Lec10RdsSecGroup:
+    Value: !Ref Lec10RdsSecGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10RdsSecGroup
+
+  Lec10AlbSecGroup:
+    Value: !Ref Lec10AlbSecGroup
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10AlbSecGroup
+
+  Lec10Ec2IamRole:
+    Value: !GetAtt Lec10Ec2IamRole.Arn
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10Ec2IamRole
+
+  Lec10RdsSecManager:
+    Value: !Ref Lec10RdsSecManager
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10RdsSecManager
+
+  Lec10Ec2InsProfile:
+    Value: !Ref Lec10Ec2InsProfile
+    Export: 
+      Name: !Sub ${AWS::StackName}-Lec10Ec2InsProfile

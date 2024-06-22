@@ -1,0 +1,179 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Create the environment up to the 6th course.
+
+Parameters: 
+  Namebase:
+    Type: String
+    Default: RaiseTech-kadai10
+
+Resources:
+  #--------------------------------------------#
+  # VPC
+  #--------------------------------------------#
+  Lec10Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-vpc
+
+  #--------------------------------------------#
+  # サブネット
+  #--------------------------------------------#
+  Lec10PubSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      CidrBlock: 10.0.0.0/20
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-subnet-public1
+      VpcId: !Ref Lec10Vpc
+
+  Lec10PubSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs ]
+      CidrBlock: 10.0.16.0/20
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-subnet-public2
+      VpcId: !Ref Lec10Vpc
+
+  Lec10PriSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      CidrBlock: 10.0.128.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-subnet-private1
+      VpcId: !Ref Lec10Vpc
+
+  Lec10PriSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs ]
+      CidrBlock: 10.0.144.0/20
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-subnet-private2
+      VpcId: !Ref Lec10Vpc
+
+  Lec10RdsSubGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: for rds
+      SubnetIds:
+        - !Ref Lec10PriSubnet1
+        - !Ref Lec10PriSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-rds-subnet-group
+
+  #--------------------------------------------#
+  # インターネットゲートウェイ
+  #--------------------------------------------#
+  Lec10Igw:
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-igw
+
+  Lec10IgwAttach:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref Lec10Igw
+      VpcId: !Ref Lec10Vpc
+
+  #--------------------------------------------#
+  # ルートテーブル
+  #--------------------------------------------#
+  Lec10PubRtTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-rtb-public
+      VpcId: !Ref Lec10Vpc
+    
+  Lec10PriRtTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-rtb-private
+      VpcId: !Ref Lec10Vpc
+
+  Lec10PubRoute:
+    Type: AWS::EC2::Route
+    DependsOn: Lec10Igw
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref Lec10Igw
+      RouteTableId: !Ref Lec10PubRtTable
+
+  Lec10PubSub1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref Lec10PubRtTable
+      SubnetId: !Ref Lec10PubSubnet1
+
+  Lec10PubSub2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref Lec10PubRtTable
+      SubnetId: !Ref Lec10PubSubnet2
+
+  Lec10PriSub1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref Lec10PriRtTable
+      SubnetId: !Ref Lec10PriSubnet1
+
+  Lec10PriSub2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref Lec10PriRtTable
+      SubnetId: !Ref Lec10PriSubnet2
+
+Outputs:
+  Lec10Vpc:
+    Value: !Ref Lec10Vpc
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10Vpc
+
+  Lec10PubSubnet1:
+    Value: !Ref Lec10PubSubnet1
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10PubSubnet1
+
+  Lec10PubSubnet2:
+    Value: !Ref Lec10PubSubnet2
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10PubSubnet2
+
+  Lec10PriSubnet1:
+    Value: !Ref Lec10PriSubnet1
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10PriSubnet1
+
+  Lec10PriSubnet2:
+    Value: !Ref Lec10PriSubnet2
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10PriSubnet2
+
+  Lec10RdsSubGroup:
+    Value: !Ref Lec10RdsSubGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-Lec10RdsSubGroup

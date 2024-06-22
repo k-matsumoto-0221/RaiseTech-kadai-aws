@@ -1,0 +1,239 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Create the environment up to the 6th course.
+
+Parameters:
+  Namebase:
+    Type: String
+    Default: RaiseTech-kadai10
+  NetworkStack:
+    Type: String
+    Default: network
+  SecurityStack:
+    Type: String
+    Default: security
+  Ec2ImageId:
+    Type: String
+    # Default: ami-08c07d6e7c1274e2a  # Amazon linux2のAMI
+    # Default: ami-03b953bae3e951358    # 5回目の講義の際に取っておいたEC2のAMI
+    Default: ami-024b33ed6cdf20e4c    # 10回目の課題に合わせて、再取得したEC2のAMI
+  MyKeyPair:
+    Type: String
+    Default: RaiseTech-kadai-keyPair  # いつも使用しているキーペア
+  MyEmail:
+    Type: String
+    Default: hogehoge # 自分のメールアドレスを記載
+
+Resources:
+  #--------------------------------------------#
+  # EC2
+  #--------------------------------------------#
+  Lec10Ec2:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp2
+            DeleteOnTermination: true
+            VolumeSize: 20
+      IamInstanceProfile:
+        Fn::ImportValue:
+          !Sub ${SecurityStack}-Lec10Ec2InsProfile
+      ImageId: !Sub ${Ec2ImageId}
+      InstanceType: t2.micro
+      KeyName: !Sub ${MyKeyPair}
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: 
+            Fn::ImportValue:
+              !Sub ${NetworkStack}-Lec10PubSubnet1
+          GroupSet:
+            - Fn::ImportValue:
+                Fn::Sub: ${SecurityStack}-Lec10Ec2SecGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-ec2
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum -y update
+        sudo yum install -y mysql
+
+  #--------------------------------------------#
+  # RDS
+  #--------------------------------------------#
+  Lec10Rds:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    Properties:
+      AllocatedStorage: 20
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      BackupRetentionPeriod: 0
+      DBInstanceClass: db.t3.micro
+      DBInstanceIdentifier: !Sub ${Namebase}-rds
+      DBSubnetGroupName:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStack}-Lec10RdsSubGroup
+      Engine: mysql
+      EngineVersion: 8.0.35
+      MasterUsername:
+        Fn::Join:
+          - ''
+          - - '{{resolve:secretsmanager:'
+            - Fn::ImportValue:
+                !Sub ${SecurityStack}-Lec10RdsSecManager
+            - ':SecretString:username}}'
+      MasterUserPassword:
+        Fn::Join:
+          - ''
+          - - '{{resolve:secretsmanager:'
+            - Fn::ImportValue: 
+                !Sub ${SecurityStack}-Lec10RdsSecManager
+            - ':SecretString:password}}'
+      Port: 3306
+      StorageType: gp3
+      VPCSecurityGroups:
+        - Fn::ImportValue:
+            Fn::Sub: ${SecurityStack}-Lec10RdsSecGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-rds
+
+  # シークレットマネージャーと RDS を結びつける
+  Lec10RdsSecAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId: 
+        Fn::ImportValue:
+          !Sub ${SecurityStack}-Lec10RdsSecManager
+      TargetId: !Ref Lec10Rds
+      TargetType: AWS::RDS::DBInstance
+
+  #--------------------------------------------#
+  # ALB
+  #--------------------------------------------#
+  Lec10Alb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAddressType: ipv4
+      Name: !Sub ${Namebase}-alb
+      Scheme: internet-facing
+      SecurityGroups:
+        - Fn::ImportValue:
+            !Sub ${SecurityStack}-Lec10AlbSecGroup
+      Subnets:
+        - Fn::ImportValue:
+            !Sub ${NetworkStack}-Lec10PubSubnet1
+        - Fn::ImportValue:
+            !Sub ${NetworkStack}-Lec10PubSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-alb
+      Type: application
+
+  Lec10AlbTarGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 5
+      HealthCheckPath: /
+      HealthCheckPort: traffic-port
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 2
+      HealthyThresholdCount: 2
+      IpAddressType: ipv4
+      Matcher:
+        HttpCode: 200-399
+      Name: !Sub ${Namebase}-tg-alb
+      Port: 80
+      Protocol: HTTP
+      ProtocolVersion: HTTP1
+      TargetType: instance
+      Targets: 
+        - Id: !Ref Lec10Ec2
+          Port: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-tg-alb
+      UnhealthyThresholdCount: 2
+      VpcId: 
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStack}-Lec10Vpc
+
+  Lec10AlbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref Lec10AlbTarGroup
+          Type: forward
+      LoadBalancerArn: !Ref Lec10Alb
+      Port: 80
+      Protocol: HTTP
+
+  #--------------------------------------------#
+  # S3
+  #--------------------------------------------#
+  Lec10S3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: false
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      BucketName: raisetech-kadai10-s3
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-s3
+
+  #--------------------------------------------#
+  # SNS
+  #--------------------------------------------#
+  Lec10SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Sub ${MyEmail}
+          Protocol: email
+      Tags: 
+        - Key: Name
+          Value: !Sub ${Namebase}-sns-topic
+      TopicName: !Sub ${Namebase}-sns-topic
+
+  #--------------------------------------------#
+  # CloudWatch
+  #--------------------------------------------#
+  Lec10CWAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions: 
+        - !Ref Lec10SnsTopic
+      AlarmDescription: Monitor OK and NG status of sample application.
+      AlarmName: !Sub ${Namebase}-cloudwatch-alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold # 以上を表す
+      DatapointsToAlarm: 5
+      Dimensions:
+        - Name: AvailabilityZone
+          Value: !Select [ 0, !GetAZs ]
+        - Name: LoadBalancer
+          Value: !GetAtt Lec10Alb.LoadBalancerFullName
+        - Name: TargetGroup
+          Value: !GetAtt Lec10AlbTarGroup.TargetGroupFullName
+      EvaluationPeriods: 5
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ApplicationELB
+      OKActions:
+        - !Ref Lec10SnsTopic
+      Period: 60
+      Statistic: Minimum
+      Tags:
+        - Key: Name
+          Value: !Sub ${Namebase}-cloudwatch-alarm
+      Threshold: 1
+      TreatMissingData: ignore
