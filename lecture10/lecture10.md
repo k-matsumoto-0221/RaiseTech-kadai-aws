@@ -28,7 +28,7 @@
       $ aws cloudformation describe-stack-resources --stack-name ${Stack-Name} --query 'StackResources[*].[LogicalResourceId, ResourceType, ResourceStatus]' --output table
       ```
     - ログ
-      - [ConstWork_20240622.log](./log/ConstWork_20240621.log)
+      - [ConstWork_20240622.log](./log/ConstWork_20240622.log)
 - リソースが作成された後は、アプリケーションが動作するように各種パッケージのインストールやファイルの修正を行う
   - 今回は事前準備として、必要なパッケージが導入済みのAMIを使用している
 
